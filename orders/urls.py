@@ -3,12 +3,6 @@ from .views import ProductListAPIView, OrderCreateAPIView, OrderDetailAPIView
 
 urlpatterns = [
     path("products/", ProductListAPIView.as_view(), name="product-list"),
-    path("orders/", OrderCreateAPIView.as_view(), name="order-create"),
+    path("checkout/place-order/", OrderCreateAPIView.as_view(), name="place-order"),
     path("orders/<int:order_id>/", OrderDetailAPIView.as_view(), name="order-detail"),
 ]
-from .views import PlaceOrderView
-
-urlpatterns = [
-    path("checkout/place-order/", PlaceOrderView.as_view(), name="place_order"),
-]
-
