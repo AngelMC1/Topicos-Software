@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Importados{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg custom-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand brand-logo" href="/">Ropium</a>
+
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item">
+                        <a class="nav-link custom-nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link custom-nav-link" href="/catalogo/">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link custom-nav-link" href="/carrito/">Carrito</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-dark nav-pill-btn ms-lg-2" href="/checkout/">Comprar ahora</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-2">Ropium</h5>
+                    <p class="mb-0 text-footer">
+                        Importamos productos originales con estilo, confianza y una experiencia de compra moderna.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-1 text-footer">Catálogo | Carrito | Checkout</p>
+                    <small class="text-footer-muted">© 2026 Importados. Todos los derechos reservados.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -60,3 +61,19 @@ class OrderDetailAPIView(APIView):
 
         serializer = OrderOutputSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def home_page(request):
+    return render(request, "frontend/home.html")
+
+
+def catalog_page(request):
+    return render(request, "frontend/catalog.html")
+
+
+def cart_page(request):
+    return render(request, "frontend/cart.html")
+
+
+def checkout_page(request):
+    return render(request, "frontend/checkout.html")

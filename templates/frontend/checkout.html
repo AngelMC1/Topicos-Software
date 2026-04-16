@@ -1,0 +1,44 @@
+{% extends "frontend/base.html" %}
+
+{% block title %}Checkout | Importados{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light min-vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm">
+                    <h1 class="fw-bold mb-3">Finalizar pedido</h1>
+                    <p class="text-muted mb-4">Completa tus datos para enviar el pedido.</p>
+
+                    <div id="checkout-alert"></div>
+
+                    <form id="checkout-form">
+                        <div class="mb-3">
+                            <label for="customer_email" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="customer_email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="city" class="form-label">Ciudad</label>
+                            <input type="text" class="form-control" id="city" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address_line" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="address_line" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Resumen del carrito</label>
+                            <div id="checkout-summary" class="border rounded-3 p-3 bg-light"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100">Enviar pedido</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
