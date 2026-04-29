@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    networks: [tienda-net]
+
+  monolito:
+    image: pitielnene/tienda-monolito:latest
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+    networks: [tienda-net]
+    deploy:
+      replicas: 2
+
+  worker:
+    image: pitielnene/tienda-monolito:latest
+    command: celery -A celery_app worker -l info
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+    networks: [tienda-net]
+    deploy:
+      replicas: 2
+
+  ms-pagos:
+    image: pitielnene/ms-pagos:latest
+    networks: [tienda-net]
+    deploy:
+      replicas: 2
+
+  gateway:
+    image: pitielnene/nginx-gateway:latest
+    ports:
+      - "80:80"
+    networks: [tienda-net]
+
+networks:
+  tienda-net:
+    driver: overlay
