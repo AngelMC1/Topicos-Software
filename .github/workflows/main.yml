@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  push_to_registry:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,10 +18,15 @@ jobs:
           docker build -t ${{ secrets.DOCKERHUB_USER }}/tienda-monolito:latest .
           docker push ${{ secrets.DOCKERHUB_USER }}/tienda-monolito:latest
 
-      - name: Build & Push Microservicio Flask
+      - name: Build & Push Microservicio Pagos
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USER }}/ms-pagos:latest ./flask_order_service
           docker push ${{ secrets.DOCKERHUB_USER }}/ms-pagos:latest
+
+      - name: Build & Push Microservicio Inventario
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USER }}/ms-inventario:latest ./ms_inventario
+          docker push ${{ secrets.DOCKERHUB_USER }}/ms-inventario:latest
 
       - name: Build & Push Nginx Gateway
         run: |

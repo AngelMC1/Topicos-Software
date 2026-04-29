@@ -1,39 +1,71 @@
 version: '3.8'
 services:
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    networks: [tienda-net]
+  redis:
+    image: redis:alpine
+    networks: [back-tier]
+
+  db:
+    image: postgres:15
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ropium
+    networks: [back-tier]
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
   monolito:
     image: pitielnene/tienda-monolito:latest
     environment:
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-    networks: [tienda-net]
+      - REDIS_HOST=redis
+    networks: [back-tier]
     deploy:
-      replicas: 2
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
 
   worker:
     image: pitielnene/tienda-monolito:latest
     command: celery -A celery_app worker -l info
     environment:
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-    networks: [tienda-net]
+      - REDIS_HOST=redis
+    networks: [back-tier]
     deploy:
-      replicas: 2
+      replicas: 5
 
   ms-pagos:
     image: pitielnene/ms-pagos:latest
-    networks: [tienda-net]
+    networks: [back-tier]
     deploy:
       replicas: 2
+
+  ms-inventario:
+    image: pitielnene/ms-inventario:latest
+    networks: [back-tier]
+    deploy:
+      replicas: 4
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
 
   gateway:
     image: pitielnene/nginx-gateway:latest
     ports:
       - "80:80"
-    networks: [tienda-net]
+    networks: [back-tier]
+    deploy:
+      replicas: 2
+      placement:
+        constraints: [node.role == manager]
 
 networks:
-  tienda-net:
+  back-tier:
     driver: overlay
+
+volumes:
+  db_data:
