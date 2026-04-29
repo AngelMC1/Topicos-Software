@@ -1,4 +1,4 @@
-# Ropium - Migración a Microservicios
+# Ropium 
 
 **Fecha:** 14/04/26  
 **Integrantes:** Cristian Cabezas, Juanes Villada y Miguel Correa
