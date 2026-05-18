@@ -1,5 +1,33 @@
 const API_PRODUCTS = "/api/products/";
 const API_CHECKOUT = "/api/v2/checkout/place-order/";
+const API_EXCHANGE_RATE = "/api/exchange-rate/";
+
+let _usdToCop = null;
+
+async function getUsdToCop() {
+    if (_usdToCop) return _usdToCop;
+    try {
+        const res = await fetch(API_EXCHANGE_RATE);
+        const data = await res.json();
+        _usdToCop = data.rate;
+    } catch {
+        _usdToCop = 4100;
+    }
+    return _usdToCop;
+}
+
+function formatUSD(valueCOP, rate) {
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 2,
+    }).format(valueCOP / rate);
+}
+
+// Fallback for environments where Django's JavaScriptCatalog is not loaded
+if (typeof gettext === "undefined") {
+    window.gettext = function (s) { return s; };
+}
 
 function getCart() {
     return JSON.parse(localStorage.getItem("cart")) || [];
@@ -21,14 +49,14 @@ async function loadProducts() {
     const container = document.getElementById("products-container");
     if (!container) return;
 
-    container.innerHTML = `<p class="text-muted">Cargando productos...</p>`;
+    container.innerHTML = `<p class="text-muted">${gettext("Cargando productos...")}</p>`;
 
     try {
-        const response = await fetch(API_PRODUCTS);
+        const [response, usdRate] = await Promise.all([fetch(API_PRODUCTS), getUsdToCop()]);
         const products = await response.json();
 
         if (!products.length) {
-            container.innerHTML = `<p class="text-muted">No hay productos disponibles.</p>`;
+            container.innerHTML = `<p class="text-muted">${gettext("No hay productos disponibles.")}</p>`;
             return;
         }
 
@@ -39,23 +67,24 @@ async function loadProducts() {
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
                             <h5 class="card-title fw-bold mb-0">${product.name}</h5>
-                            <span class="product-badge">Importado</span>
+                            <span class="product-badge">${gettext("Importado")}</span>
                         </div>
-                        <p class="card-text text-muted">${product.description || "Producto importado disponible."}</p>
-                        <p class="price mb-3">${formatPrice(product.price)}</p>
-                        <button class="btn btn-dark w-100" onclick="addToCart(${product.id}, '${String(product.name).replace(/'/g, "\\'")}', ${product.price})">
-                            Agregar al carrito
+                        <p class="card-text text-muted">${product.description || gettext("Producto importado disponible.")}</p>
+                        <p class="price mb-1">${formatPrice(product.price)}</p>
+                        <p class="text-muted small mb-3">≈ ${formatUSD(product.price, usdRate)}</p>
+                        <button class="btn btn-dark w-100" onclick="addToCart(${product.id}, '${String(product.name).replace(/'/g, "\\'")}', ${product.price}, '${(product.image_url || '').replace(/'/g, "\\'")}')">
+                            ${gettext("Agregar al carrito")}
                         </button>
                     </div>
                 </div>
             </div>
         `).join("");
     } catch (error) {
-        container.innerHTML = `<p class="text-danger">No se pudieron cargar los productos.</p>`;
+        container.innerHTML = `<p class="text-danger">${gettext("No se pudieron cargar los productos.")}</p>`;
     }
 }
 
-function addToCart(id, name, price) {
+function addToCart(id, name, price, image_url = "") {
     const cart = getCart();
     const existing = cart.find(item => item.product_id === id);
 
@@ -66,15 +95,16 @@ function addToCart(id, name, price) {
             product_id: id,
             name,
             price,
+            image_url,
             qty: 1
         });
     }
 
     saveCart(cart);
-    alert("Producto agregado al carrito.");
+    alert(gettext("Producto agregado al carrito."));
 }
 
-function loadCart() {
+async function loadCart() {
     const container = document.getElementById("cart-container");
     const totalElement = document.getElementById("cart-total");
     const countElement = document.getElementById("cart-count");
@@ -87,9 +117,9 @@ function loadCart() {
             <div class="col-12">
                 <div class="empty-cart-box">
                     <div class="empty-cart-icon">🛒</div>
-                    <h3 class="fw-bold mb-2">Tu carrito está vacío</h3>
-                    <p class="text-muted mb-4">Todavía no has agregado productos. Ve al catálogo y empieza a construir tu pedido.</p>
-                    <a href="/catalogo/" class="btn btn-dark premium-btn-main">Explorar catálogo</a>
+                    <h3 class="fw-bold mb-2">${gettext("Tu carrito está vacío")}</h3>
+                    <p class="text-muted mb-4">${gettext("Todavía no has agregado productos. Ve al catálogo y empieza a construir tu pedido.")}</p>
+                    <a href="/catalogo/" class="btn btn-dark premium-btn-main">${gettext("Explorar catálogo")}</a>
                 </div>
             </div>
         `;
@@ -98,6 +128,7 @@ function loadCart() {
         return;
     }
 
+    const usdRate = await getUsdToCop();
     let total = 0;
     let count = 0;
 
@@ -105,26 +136,27 @@ function loadCart() {
         const subtotal = item.price * item.qty;
         total += subtotal;
         count += item.qty;
+        const imgSrc = item.image_url || "https://via.placeholder.com/400x300?text=Producto";
 
         return `
             <div class="col-12">
                 <div class="cart-item-premium">
                     <div class="cart-item-image">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80" alt="${item.name}">
+                        <img src="${imgSrc}" alt="${item.name}">
                     </div>
 
                     <div class="cart-item-content">
                         <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                             <div>
-                                <span class="product-badge mb-2 d-inline-block">Producto seleccionado</span>
+                                <span class="product-badge mb-2 d-inline-block">${gettext("Producto seleccionado")}</span>
                                 <h4 class="fw-bold mb-1">${item.name}</h4>
-                                <p class="text-muted mb-2">Producto agregado al carrito para tu pedido.</p>
-                                <p class="cart-item-price mb-0">${formatPrice(item.price)} c/u</p>
+                                <p class="cart-item-price mb-0">${formatPrice(item.price)} ${gettext("c/u")} <span class="text-muted small">≈ ${formatUSD(item.price, usdRate)}</span></p>
                             </div>
 
                             <div class="text-lg-end">
-                                <p class="text-muted mb-1">Subtotal</p>
+                                <p class="text-muted mb-1">${gettext("Subtotal")}</p>
                                 <h5 class="fw-bold mb-0">${formatPrice(subtotal)}</h5>
+                                <p class="text-muted small mb-0">≈ ${formatUSD(subtotal, usdRate)}</p>
                             </div>
                         </div>
 
@@ -136,7 +168,7 @@ function loadCart() {
                             </div>
 
                             <button class="btn btn-outline-danger delete-btn" onclick="removeItem(${index})">
-                                Eliminar
+                                ${gettext("Eliminar")}
                             </button>
                         </div>
                     </div>
@@ -147,6 +179,8 @@ function loadCart() {
 
     totalElement.textContent = formatPrice(total);
     if (countElement) countElement.textContent = count;
+    const usdTotalEl = document.getElementById("cart-total-usd");
+    if (usdTotalEl) usdTotalEl.textContent = `≈ ${formatUSD(total, usdRate)}`;
 }
 
 function changeQty(index, delta) {
@@ -172,17 +206,18 @@ function removeItem(index) {
     loadCheckoutSummary();
 }
 
-function loadCheckoutSummary() {
+async function loadCheckoutSummary() {
     const summary = document.getElementById("checkout-summary");
     if (!summary) return;
 
     const cart = getCart();
 
     if (!cart.length) {
-        summary.innerHTML = `<p class="mb-0 text-muted">No hay productos en el carrito.</p>`;
+        summary.innerHTML = `<p class="mb-0 text-muted">${gettext("No hay productos en el carrito.")}</p>`;
         return;
     }
 
+    const usdRate = await getUsdToCop();
     let total = 0;
 
     summary.innerHTML = cart.map(item => {
@@ -190,17 +225,23 @@ function loadCheckoutSummary() {
         total += subtotal;
         return `
             <div class="checkout-item p-3 mb-2">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-start">
                     <span>${item.name} x ${item.qty}</span>
-                    <strong>${formatPrice(subtotal)}</strong>
+                    <div class="text-end">
+                        <strong class="d-block">${formatPrice(subtotal)}</strong>
+                        <small class="text-muted">≈ ${formatUSD(subtotal, usdRate)}</small>
+                    </div>
                 </div>
             </div>
         `;
     }).join("") + `
         <hr>
-        <div class="d-flex justify-content-between">
-            <strong>Total estimado</strong>
-            <strong>${formatPrice(total)}</strong>
+        <div class="d-flex justify-content-between align-items-start">
+            <strong>${gettext("Total estimado")}</strong>
+            <div class="text-end">
+                <strong class="d-block">${formatPrice(total)}</strong>
+                <small class="text-muted">≈ ${formatUSD(total, usdRate)}</small>
+            </div>
         </div>
     `;
 }
@@ -216,7 +257,7 @@ function setupCheckoutForm() {
         const cart = getCart();
 
         if (!cart.length) {
-            alertBox.innerHTML = `<div class="alert alert-warning">El carrito está vacío.</div>`;
+            alertBox.innerHTML = `<div class="alert alert-warning">${gettext("El carrito está vacío.")}</div>`;
             return;
         }
 
@@ -244,15 +285,15 @@ function setupCheckoutForm() {
             const data = await response.json();
 
             if (response.ok) {
-                alertBox.innerHTML = `<div class="alert alert-success">Pedido enviado correctamente.</div>`;
+                alertBox.innerHTML = `<div class="alert alert-success">${gettext("Pedido enviado correctamente.")}</div>`;
                 localStorage.removeItem("cart");
                 form.reset();
                 loadCheckoutSummary();
             } else {
-                alertBox.innerHTML = `<div class="alert alert-danger">${data.detail || "No se pudo enviar el pedido."}</div>`;
+                alertBox.innerHTML = `<div class="alert alert-danger">${data.detail || gettext("No se pudo enviar el pedido.")}</div>`;
             }
         } catch (error) {
-            alertBox.innerHTML = `<div class="alert alert-danger">Error de conexión con el servidor.</div>`;
+            alertBox.innerHTML = `<div class="alert alert-danger">${gettext("Error de conexión con el servidor.")}</div>`;
         }
     });
 }

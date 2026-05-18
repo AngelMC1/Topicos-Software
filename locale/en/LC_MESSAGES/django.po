@@ -1,0 +1,200 @@
+# English translations for Ropium
+# Copyright (C) 2026
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Inicio"
+msgstr "Home"
+
+msgid "Catálogo"
+msgstr "Catalog"
+
+msgid "Carrito"
+msgstr "Cart"
+
+msgid "Comprar ahora"
+msgstr "Buy Now"
+
+msgid "Importamos productos originales con estilo, confianza y una experiencia de compra moderna."
+msgstr "We import original products with style, confidence, and a modern shopping experience."
+
+msgid "Catálogo | Carrito | Checkout"
+msgstr "Catalog | Cart | Checkout"
+
+msgid "© 2026 Importados. Todos los derechos reservados."
+msgstr "© 2026 Importados. All rights reserved."
+
+msgid "Sitio oficial"
+msgstr "Official site"
+
+msgid "Bienvenido a la mejor tienda de productos importados 100% originales y de las mejores marcas del mundo."
+msgstr "Welcome to the best store of 100% original products from the world's top brands."
+
+msgid "Bienvenido a Ropium, tu tienda de productos importados totalmente originales."
+msgstr "Welcome to Ropium, your store for 100% original imported products."
+
+msgid "Explorar catálogo"
+msgstr "Explore catalog"
+
+msgid "Simple"
+msgstr "Simple"
+
+msgid "Carrito y checkout claros"
+msgstr "Clear cart and checkout"
+
+msgid "Dudas?"
+msgstr "Questions?"
+
+msgid "Contactanos al WhatsApp"
+msgstr "Contact us on WhatsApp"
+
+msgid "Tenis importados"
+msgstr "Imported sneakers"
+
+msgid "Moda importada"
+msgstr "Imported fashion"
+
+msgid "Ropa importada"
+msgstr "Imported clothing"
+
+msgid "Nuevo catálogo"
+msgstr "New catalog"
+
+msgid "Marcas mas vendidas"
+msgstr "Best selling brands"
+
+msgid "Explora"
+msgstr "Explore"
+
+msgid "Drops nuevos todos los días!"
+msgstr "New drops every day!"
+
+msgid "Ropium mas de 1 año de experiencia importando productos originales con estilo, confianza y una experiencia de compra moderna."
+msgstr "Ropium with over 1 year of experience importing original products with style, confidence, and a modern shopping experience."
+
+msgid "Explora productos disponibles por encargo"
+msgstr "Explore products available on order"
+
+msgid "Ir al catálogo"
+msgstr "Go to catalog"
+
+msgid "Gestiona cantidades, revisa el resumen y construye tu pedido de forma intuitiva."
+msgstr "Manage quantities, review the summary and build your order intuitively."
+
+msgid "Ver carrito"
+msgstr "View cart"
+
+msgid "Finaliza tu compra de forma rápida y segura."
+msgstr "Complete your purchase quickly and securely."
+
+msgid "Finalizar compra"
+msgstr "Complete purchase"
+
+msgid "Sobre nosotros"
+msgstr "About us"
+
+msgid "Tener en cuenta!"
+msgstr "Keep in mind!"
+
+msgid "Todo 100% original"
+msgstr "100% original"
+
+msgid "Envío gratis a todo el país"
+msgstr "Free shipping nationwide"
+
+msgid "Envíos rapidos y seguros"
+msgstr "Fast and secure shipping"
+
+msgid "Los mejores precios del mercado"
+msgstr "Best market prices"
+
+msgid "Empezar ahora"
+msgstr "Start now"
+
+msgid "Ver mi carrito"
+msgstr "View my cart"
+
+msgid "Listo para comprar"
+msgstr "Ready to buy"
+
+msgid "Recuerda que puedes copiarnos y preguntar si nos ves tu producto deseado"
+msgstr "Remember you can message us and ask about your desired product"
+
+msgid "Empieza explorando el catálogo"
+msgstr "Start by exploring the catalog"
+
+msgid "Ver catálogo"
+msgstr "View catalog"
+
+msgid "Ir al checkout"
+msgstr "Go to checkout"
+
+msgid "Showcase importados"
+msgstr "Imported showcase"
+
+msgid "Colección"
+msgstr "Collection"
+
+msgid "Explora nuestro catálogo"
+msgstr "Explore our catalog"
+
+msgid "Descubre productos disponibles, agrégalos al carrito y construye tu pedido."
+msgstr "Discover available products, add them to cart and build your order."
+
+msgid "Productos conectados a la API"
+msgstr "API-connected products"
+
+msgid "Diseño premium"
+msgstr "Premium design"
+
+msgid "Tu selección"
+msgstr "Your selection"
+
+msgid "Carrito de compras"
+msgstr "Shopping cart"
+
+msgid "Revisa tus productos, ajusta cantidades y prepara tu pedido antes de finalizar la compra."
+msgstr "Review your products, adjust quantities and prepare your order before completing the purchase."
+
+msgid "Seguir comprando"
+msgstr "Continue shopping"
+
+msgid "Resumen"
+msgstr "Summary"
+
+msgid "Tu pedido"
+msgstr "Your order"
+
+msgid "Productos en carrito"
+msgstr "Products in cart"
+
+msgid "Total estimado"
+msgstr "Estimated total"
+
+msgid "Agregar más productos"
+msgstr "Add more products"
+
+msgid "Finalizar pedido"
+msgstr "Complete order"
+
+msgid "Completa tus datos para enviar el pedido."
+msgstr "Complete your details to submit the order."
+
+msgid "Correo electrónico"
+msgstr "Email address"
+
+msgid "Ciudad"
+msgstr "City"
+
+msgid "Dirección"
+msgstr "Address"
+
+msgid "Resumen del carrito"
+msgstr "Cart summary"
+
+msgid "Enviar pedido"
+msgstr "Submit order"

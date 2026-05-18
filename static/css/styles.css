@@ -59,6 +59,31 @@ body {
     font-weight: 800 !important;
 }
 
+.lang-select {
+    border: 1.5px solid rgba(15, 23, 42, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #344054;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23344054'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    padding-right: 2rem;
+}
+
+.lang-select:hover,
+.lang-select:focus {
+    border-color: var(--dark);
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+    outline: none;
+}
+
 /* BOTONES GENERALES */
 .btn,
 .home-v2-btn-primary,

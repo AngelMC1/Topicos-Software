@@ -1,125 +1,177 @@
-# Ropium 
+# Ropium
 
 **Fecha:** 14/04/26  
 **Integrantes:** Cristian Cabezas, Juanes Villada y Miguel Correa
 
-## Descripción del proyecto
+## Descripcion del proyecto
 
-Este proyecto es una tienda web de productos importados llamada **Ropium**. La aplicación permite ver un catálogo de productos, agregarlos al carrito y finalizar un pedido por medio de un checkout.
+Ropium es una tienda web de ropa y accesorios importados. Permite ver un catalogo de productos, agregar articulos al carrito, ver precios en pesos colombianos y en dolares, y finalizar un pedido con datos de envio.
 
-Inicialmente el sistema estaba planteado como un monolito en **Django**, pero en este trabajo aplicamos una migración gradual usando el patrón **Strangler Pattern**, separando el módulo de checkout en un microservicio independiente hecho con **Flask**.
+El proyecto empezo como un monolito en Django y fue evolucionando hacia una arquitectura con microservicios, tareas en segundo plano y conexion con servicios externos.
 
-## ¿Qué hicimos?
-
-En el proyecto se construyó una aplicación web con Django para manejar las páginas principales de la tienda, como inicio, catálogo, carrito y checkout. También se creó una API para listar productos, crear pedidos y consultar el detalle de un pedido.
-
-Además, se separó la funcionalidad de creación de pedidos en un microservicio en Flask. La idea fue que el checkout pudiera funcionar aparte del monolito, sin tener que migrar toda la aplicación de una sola vez.
-
-## Tecnologías utilizadas
-
-- Python
-- Django
-- Django REST Framework
-- Flask
-- Docker
-- Docker Compose
-- Nginx
-- HTML
-- CSS
-- JavaScript
-- Bootstrap
-- SQLite
+---
 
 ## Arquitectura general
 
-El sistema quedó dividido en tres partes principales:
+El sistema corre en un servidor de AWS EC2. Nginx recibe todas las peticiones del navegador y las distribuye entre los distintos servicios segun la ruta.
 
-1. **Django**: maneja el monolito principal, las vistas del frontend y las rutas base de la aplicación.
-2. **Flask**: maneja el nuevo microservicio encargado del checkout.
-3. **Nginx**: funciona como proxy inverso para redirigir las peticiones según la ruta.
+```mermaid
+graph TD
+    User[Navegador] --> EC2[AWS EC2]
+    EC2 --> Nginx[Nginx - puerto 80]
 
-La ruta antigua del checkout en Django era:
+    Nginx -->|Paginas y API principal| Django[Django - monolito]
+    Nginx -->|/api/v2/checkout/| Pagos[ms-pagos - Flask]
+    Nginx -->|/api/inventory/| Inventario[ms-inventario - Flask]
 
-```txt
-/api/checkout/place-order/
+    Django --> SQLite[(Base de datos)]
+    Django --> Redis[(Redis)]
+    Pagos --> Redis
+    Redis --> Celery[Celery Worker]
+
+    Django --> TasaCambio[open.er-api.com]
+    Django --> Aliado[Servicio aliado externo]
 ```
 
-La nueva ruta del microservicio en Flask es:
+### Rutas que maneja Nginx
 
-```txt
-/api/v2/checkout/place-order/
+| Ruta | Servicio |
+|------|----------|
+| `/` y paginas del frontend | Django |
+| `/api/products/`, `/api/orders/` | Django |
+| `/api/exchange-rate/`, `/api/status/` | Django |
+| `/api/v2/checkout/place-order/` | ms-pagos (Flask) |
+| `/api/inventory/` | ms-inventario (Flask) |
+
+---
+
+## Flujo de un pedido
+
+Cuando alguien hace un pedido desde el checkout, el flujo es el siguiente:
+
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant Flask as ms-pagos (Flask)
+    participant Redis
+    participant Celery as Celery Worker
+
+    Cliente->>Flask: POST /api/v2/checkout/place-order/
+    Flask->>Flask: Calcula subtotal, arancel y envio
+    Flask->>Redis: Encola tarea de notificacion
+    Flask-->>Cliente: 201 - Pedido recibido (respuesta inmediata)
+    Redis->>Celery: Ejecuta tarea en segundo plano
+    Celery->>Celery: Registra confirmacion del pedido
 ```
 
-## Módulo migrado
+El cliente recibe respuesta de inmediato. La notificacion se procesa despues, sin bloquear la respuesta.
 
-El módulo que se decidió migrar fue el de **creación de pedidos / checkout**, porque es una parte importante del negocio. En este proceso se validan los datos del cliente, los productos, las cantidades, la dirección y se calculan valores como subtotal, costo de importación, envío y total.
+---
 
-Se escogió este módulo porque puede cambiar con frecuencia y porque se puede separar sin afectar todo el sistema.
+## Despliegue en AWS
 
-## Funcionalidades principales
+```mermaid
+graph LR
+    Internet -->|Puerto 80| EC2[Instancia EC2]
+    EC2 --> Compose[Docker Compose]
+    Compose --> Nginx
+    Compose --> Django
+    Compose --> Pagos[ms-pagos]
+    Compose --> Inventario[ms-inventario]
+    Compose --> Redis
+    Compose --> Celery
+```
 
-- Página de inicio de la tienda.
-- Catálogo de productos conectado a la API.
-- Carrito de compras usando `localStorage`.
-- Checkout con formulario de correo, ciudad y dirección.
-- API para listar productos activos.
-- API para crear pedidos.
-- Microservicio Flask para procesar pedidos desde una nueva ruta.
-- Nginx para redirigir tráfico entre Django y Flask.
-- Docker Compose para levantar los servicios juntos.
+Todos los servicios corren como contenedores Docker dentro de la misma instancia EC2. Nginx es el unico que expone un puerto al exterior.
 
-## Patrones y buenas prácticas aplicadas
+---
 
-También se aplicaron algunas ideas de arquitectura para organizar mejor el código:
+## Novedades de este entregable
 
-- **Service Layer**: se usó un servicio para manejar la lógica de creación de pedidos.
-- **Builder Pattern**: se usó para construir y validar pedidos antes de guardarlos.
-- **Factory Pattern**: se usó para decidir si la notificación se hace en modo MOCK o REAL.
-- **Strangler Pattern**: se usó para migrar poco a poco una parte del monolito hacia un microservicio.
+### Soporte en dos idiomas
 
-## Cómo ejecutar el proyecto
+La aplicacion esta disponible en espanol e ingles. El usuario puede cambiar el idioma desde cualquier pagina usando el selector en la barra de navegacion. Todos los textos del frontend estan traducidos, incluyendo las notificaciones del carrito.
 
-Para ejecutar el proyecto con Docker, se puede usar:
+### Precio en dolares
+
+El catalogo, el carrito y el resumen del checkout muestran cada precio en pesos colombianos y tambien su equivalente aproximado en dolares. La tasa de cambio se consulta en tiempo real desde `open.er-api.com`.
+
+Si el servicio externo no responde, se usa una tasa de respaldo de $4.100 COP por dolar.
+
+### Tareas en segundo plano con Celery
+
+Cuando se crea un pedido (ya sea desde Django o desde el microservicio Flask), se encola una tarea en Redis que Celery procesa de forma asincrona. Esto permite que el servidor responda rapido y deje trabajos como notificaciones o registros para despues.
+
+### Dos microservicios Flask
+
+- **ms-pagos**: procesa el checkout con calculo de arancel de importacion (8%) y costo de envio fijo.
+- **ms-inventario**: servicio independiente para consultas de inventario.
+
+### Servicio aliado
+
+Django puede consumir un servicio externo de un equipo aliado. La URL se configura por variable de entorno (`ALLIED_SERVICE_URL`). Si el servicio no esta disponible, la aplicacion responde con un estado de error sin caerse.
+
+---
+
+## Patrones de diseno aplicados
+
+| Patron | Donde se usa |
+|--------|--------------|
+| Strangler Pattern | Migracion gradual del checkout de Django a Flask |
+| Adapter + DIP | Conexion con la API de tasa de cambio y el servicio aliado |
+| Builder Pattern | Construccion y validacion de pedidos |
+| Factory Pattern | Seleccion del tipo de notificador (MOCK o REAL) |
+| Service Layer | Logica de negocio separada de las vistas |
+
+---
+
+## Como correr el proyecto localmente
 
 ```bash
+docker compose down -v
 docker compose up --build
 ```
 
-Después de levantar los servicios, se pueden revisar estas rutas:
+Cuando los contenedores esten listos, abrir en el navegador:
 
-```txt
+```
 http://localhost/
-http://localhost/catalogo/
-http://localhost/carrito/
-http://localhost/checkout/
 ```
 
-También se puede probar la nueva ruta del microservicio:
+### Endpoints principales
 
-```txt
-POST http://localhost/api/v2/checkout/place-order/
+```
+GET  /api/products/                        Lista de productos
+POST /api/orders/                          Crear pedido (Django)
+POST /api/v2/checkout/place-order/         Crear pedido (Flask)
+GET  /api/exchange-rate/                   Tasa de cambio USD/COP
+GET  /api/status/                          Estado del sistema
+GET  /api/allied/                          Consulta al servicio aliado
 ```
 
-Ejemplo de JSON para probar el checkout:
+### Ejemplo de pedido
 
 ```json
+POST /api/v2/checkout/place-order/
 {
   "customer_email": "cliente@correo.com",
-  "items": [
-    {
-      "product_id": 1,
-      "qty": 2
-    }
-  ],
+  "items": [{ "product_id": 1, "qty": 2 }],
   "address": {
-    "city": "Medellín",
-    "address_line": "Cra 45 # 10 - 20"
+    "city": "Medellin",
+    "address_line": "Cra 45 # 10-20"
   }
 }
 ```
 
-## Conclusión
+---
 
-Con este trabajo logramos pasar de una aplicación monolítica en Django a una arquitectura un poco más dividida, donde el checkout ya puede funcionar como microservicio en Flask. Esto permite entender cómo una empresa podría migrar partes de un sistema grande sin tener que rehacerlo todo desde cero.
+## Tecnologias
 
-En resumen, el proyecto muestra una tienda funcional, con frontend, API, lógica de negocio organizada y una primera migración usando Strangler Pattern.
+- Python, Django, Django REST Framework
+- Flask
+- Celery + Redis
+- Nginx
+- Docker y Docker Compose
+- AWS EC2
+- Bootstrap, JavaScript
+- SQLite

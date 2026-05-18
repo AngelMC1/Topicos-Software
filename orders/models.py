@@ -5,6 +5,8 @@ class Product(models.Model):
     brand = models.CharField(max_length=80, blank=True, default="")
     sku = models.CharField(max_length=60, blank=True, default="")
     price = models.DecimalField(max_digits=12, decimal_places=2)
+    image_url = models.URLField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

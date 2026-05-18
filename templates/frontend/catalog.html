@@ -1,28 +1,29 @@
 {% extends "frontend/base.html" %}
+{% load i18n %}
 
-{% block title %}Catálogo | Importados{% endblock %}
+{% block title %}{% trans "Catálogo" %} | Importados{% endblock %}
 
 {% block content %}
 <section class="catalog-hero-section">
     <div class="container">
         <div class="catalog-header-box">
             <div>
-                <span class="section-label">Colección</span>
-                <h1 class="fw-bold mb-2">Explora nuestro catálogo</h1>
+                <span class="section-label">{% trans "Colección" %}</span>
+                <h1 class="fw-bold mb-2">{% trans "Explora nuestro catálogo" %}</h1>
                 <p class="text-muted mb-0">
-                    Descubre productos disponibles, agrégalos al carrito y construye tu pedido.
+                    {% trans "Descubre productos disponibles, agrégalos al carrito y construye tu pedido." %}
                 </p>
             </div>
             <div class="d-flex gap-2 flex-wrap">
-                <a href="/carrito/" class="btn btn-dark nav-pill-btn">Ver carrito</a>
-                <a href="/checkout/" class="btn btn-outline-dark nav-pill-btn">Ir al checkout</a>
+                <a href="/carrito/" class="btn btn-dark nav-pill-btn">{% trans "Ver carrito" %}</a>
+                <a href="/checkout/" class="btn btn-outline-dark nav-pill-btn">{% trans "Ir al checkout" %}</a>
             </div>
         </div>
 
         <div class="catalog-toolbar">
             <div class="catalog-toolbar-left">
-                <span class="toolbar-chip">Productos conectados a la API</span>
-                <span class="toolbar-chip">Diseño premium</span>
+                <span class="toolbar-chip">{% trans "Productos conectados a la API" %}</span>
+                <span class="toolbar-chip">{% trans "Diseño premium" %}</span>
             </div>
         </div>
 

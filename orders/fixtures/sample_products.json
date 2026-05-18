@@ -1,0 +1,67 @@
+[
+  {
+    "model": "orders.product",
+    "pk": 1,
+    "fields": {
+      "name": "Nike Air Force 1",
+      "brand": "Nike",
+      "sku": "NIKE-AF1-001",
+      "price": "450000.00",
+      "image_url": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=900&q=80",
+      "description": "Clásica zapatilla de cuero blanco con suela Air, icónica desde 1982. Importada directamente de EE.UU.",
+      "is_active": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 2,
+    "fields": {
+      "name": "Adidas Ultraboost 22",
+      "brand": "Adidas",
+      "sku": "ADI-UB22-002",
+      "price": "520000.00",
+      "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80",
+      "description": "Running de alto rendimiento con tecnología Boost de amortiguación infinita. Diseño premium importado.",
+      "is_active": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 3,
+    "fields": {
+      "name": "Hugo Boss Hoodie Classic",
+      "brand": "Hugo Boss",
+      "sku": "HUGO-HH-003",
+      "price": "380000.00",
+      "image_url": "https://images.unsplash.com/photo-1556821840-3a63f15732ce?auto=format&fit=crop&w=900&q=80",
+      "description": "Sudadera con capucha de algodón premium con logo bordado. Elegancia casual de marca europea importada.",
+      "is_active": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 4,
+    "fields": {
+      "name": "Sprayground Shark Backpack",
+      "brand": "Sprayground",
+      "sku": "SPRAY-SB-004",
+      "price": "290000.00",
+      "image_url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80",
+      "description": "Mochila urbana con diseño exclusivo de tiburón, compartimentos organizados y material resistente al agua.",
+      "is_active": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 5,
+    "fields": {
+      "name": "Nike Dri-FIT Tee",
+      "brand": "Nike",
+      "sku": "NIKE-DT-005",
+      "price": "120000.00",
+      "image_url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
+      "description": "Camiseta deportiva con tecnología Dri-FIT que aleja el sudor de la piel. Ideal para entrenamientos intensos.",
+      "is_active": true
+    }
+  }
+]

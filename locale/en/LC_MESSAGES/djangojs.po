@@ -1,0 +1,75 @@
+# English JavaScript translations for Ropium
+# Copyright (C) 2026
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# app.js — product catalog
+msgid "Cargando productos..."
+msgstr "Loading products..."
+
+msgid "No hay productos disponibles."
+msgstr "No products available."
+
+msgid "Importado"
+msgstr "Imported"
+
+msgid "Producto importado disponible."
+msgstr "Imported product available."
+
+msgid "Agregar al carrito"
+msgstr "Add to cart"
+
+msgid "No se pudieron cargar los productos."
+msgstr "Could not load products."
+
+# app.js — cart
+msgid "Producto agregado al carrito."
+msgstr "Product added to cart."
+
+msgid "Tu carrito está vacío"
+msgstr "Your cart is empty"
+
+msgid "Todavía no has agregado productos. Ve al catálogo y empieza a construir tu pedido."
+msgstr "You haven't added any products yet. Go to the catalog and start building your order."
+
+msgid "Explorar catálogo"
+msgstr "Explore catalog"
+
+msgid "Producto seleccionado"
+msgstr "Selected product"
+
+msgid "Producto agregado al carrito para tu pedido."
+msgstr "Product added to cart for your order."
+
+msgid "c/u"
+msgstr "each"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+msgid "Eliminar"
+msgstr "Remove"
+
+# app.js — checkout summary
+msgid "No hay productos en el carrito."
+msgstr "No products in the cart."
+
+msgid "Total estimado"
+msgstr "Estimated total"
+
+# app.js — checkout form
+msgid "El carrito está vacío."
+msgstr "The cart is empty."
+
+msgid "Pedido enviado correctamente."
+msgstr "Order submitted successfully."
+
+msgid "No se pudo enviar el pedido."
+msgstr "Could not submit the order."
+
+msgid "Error de conexión con el servidor."
+msgstr "Connection error with the server."

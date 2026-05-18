@@ -1,20 +1,52 @@
 services:
-  django_web:
-    build: .
-    container_name: django_web
-    command: python manage.py runserver 0.0.0.0:8000
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
     ports:
-      - "8000:8000"
+      - "6379:6379"
+    networks:
+      - back-tier
+
+  monolito:
+    build: .
+    container_name: monolito
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - ENV_TYPE=MOCK
+      - ALLIED_SERVICE_URL=${ALLIED_SERVICE_URL:-http://localhost:8001/api/status/}
     volumes:
       - .:/app
+    depends_on:
+      - redis
+    networks:
+      - back-tier
 
-  flask_order_service:
-    build: ./flask_order_service
-    container_name: flask_order_service
-    ports:
-      - "5000:5000"
+  celery_worker:
+    build: .
+    container_name: celery_worker
+    command: sh -c "sleep 5 && celery -A celery_app worker --loglevel=info --concurrency=2"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
     volumes:
-      - ./flask_order_service:/app
+      - .:/app
+    depends_on:
+      - redis
+      - monolito
+    networks:
+      - back-tier
+
+  ms-pagos:
+    build: ./flask_order_service
+    container_name: ms-pagos
+    networks:
+      - back-tier
+
+  ms-inventario:
+    build: ./ms_inventario
+    container_name: ms-inventario
+    networks:
+      - back-tier
 
   nginx:
     image: nginx:latest
@@ -24,5 +56,12 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - django_web
-      - flask_order_service
+      - monolito
+      - ms-pagos
+      - ms-inventario
+    networks:
+      - back-tier
+
+networks:
+  back-tier:
+    driver: bridge

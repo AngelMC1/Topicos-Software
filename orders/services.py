@@ -69,7 +69,7 @@ class OrderService:
             .build_and_save()
         )
 
-        # 6) Notificación (Factory MOCK/REAL) - evidencia del taller
+        # 6) Notificación sincrónica (Factory MOCK/REAL) - evidencia del patrón Factory
         self.notifier.send_order_confirmation(
             OrderConfirmationData(
                 order_id=order.id,
@@ -77,4 +77,9 @@ class OrderService:
                 total=str(order.total),
             )
         )
+
+        # 7) Notificación asíncrona vía Celery (proceso de fondo, no bloquea la respuesta HTTP)
+        from orders.tasks import notify_order_created
+        notify_order_created.delay(order.id, order.customer_email, str(order.total))
+
         return order

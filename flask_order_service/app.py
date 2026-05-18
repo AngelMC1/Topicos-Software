@@ -1,6 +1,12 @@
+import os
 from flask import Flask, request, jsonify
+from celery import Celery
 
 app = Flask(__name__)
+
+# Mismo broker Redis que usa el worker de Django — permite disparar tareas desde Flask
+_broker = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")
+celery_client = Celery(broker=_broker)
 
 
 @app.route("/api/v2/checkout/place-order/", methods=["POST"])
@@ -29,14 +35,22 @@ def create_order():
             qty = item.get("qty", 0)
             if qty <= 0:
                 return jsonify({"detail": "Cantidad inválida. Debe ser mayor que 0."}), 400
-
             subtotal += 100000 * qty
 
         import_fee = round(subtotal * 0.08, 2)
         shipping = 15000.00
         total = round(subtotal + import_fee + shipping, 2)
 
-        response = {
+        # Dispara tarea asíncrona al worker de Celery (Django) sin bloquear la respuesta
+        try:
+            celery_client.send_task(
+                "orders.notify_order_created",
+                args=[None, customer_email, str(total)],
+            )
+        except Exception:
+            pass  # No falla el checkout si Celery no está disponible
+
+        return jsonify({
             "message": "Pedido procesado en microservicio Flask",
             "customer_email": customer_email,
             "address": address,
@@ -45,16 +59,14 @@ def create_order():
                 "subtotal": subtotal,
                 "import_fee": import_fee,
                 "shipping": shipping,
-                "total": total
-            }
-        }
-
-        return jsonify(response), 201
+                "total": total,
+            },
+        }), 201
 
     except Exception as e:
         return jsonify({
             "detail": "Error interno al procesar el pedido.",
-            "error": str(e)
+            "error": str(e),
         }), 500
 
 

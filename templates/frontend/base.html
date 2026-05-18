@@ -1,6 +1,7 @@
-{% load static %}
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,16 +22,28 @@
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                     <li class="nav-item">
-                        <a class="nav-link custom-nav-link" href="/">Inicio</a>
+                        <a class="nav-link custom-nav-link" href="/">{% trans "Inicio" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-nav-link" href="/catalogo/">Catálogo</a>
+                        <a class="nav-link custom-nav-link" href="/catalogo/">{% trans "Catálogo" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-nav-link" href="/carrito/">Carrito</a>
+                        <a class="nav-link custom-nav-link" href="/carrito/">{% trans "Carrito" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-dark nav-pill-btn ms-lg-2" href="/checkout/">Comprar ahora</a>
+                        <a class="btn btn-dark nav-pill-btn ms-lg-2" href="/checkout/">{% trans "Comprar ahora" %}</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <form action="{% url 'set_language' %}" method="post" class="d-flex align-items-center">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <select name="language" class="form-select form-select-sm lang-select" onchange="this.form.submit()">
+                                {% get_available_languages as LANGUAGES %}
+                                {% for lang_code, lang_name in LANGUAGES %}
+                                    <option value="{{ lang_code }}"{% if lang_code == LANGUAGE_CODE %} selected{% endif %}>{{ lang_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -47,18 +60,19 @@
                 <div class="col-md-6">
                     <h5 class="fw-bold mb-2">Ropium</h5>
                     <p class="mb-0 text-footer">
-                        Importamos productos originales con estilo, confianza y una experiencia de compra moderna.
+                        {% trans "Importamos productos originales con estilo, confianza y una experiencia de compra moderna." %}
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-1 text-footer">Catálogo | Carrito | Checkout</p>
-                    <small class="text-footer-muted">© 2026 Importados. Todos los derechos reservados.</small>
+                    <p class="mb-1 text-footer">{% trans "Catálogo | Carrito | Checkout" %}</p>
+                    <small class="text-footer-muted">{% trans "© 2026 Importados. Todos los derechos reservados." %}</small>
                 </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
     {% block scripts %}{% endblock %}
 </body>

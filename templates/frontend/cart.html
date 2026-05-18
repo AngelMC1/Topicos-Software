@@ -1,21 +1,22 @@
 {% extends "frontend/base.html" %}
+{% load i18n %}
 
-{% block title %}Carrito | Importados{% endblock %}
+{% block title %}{% trans "Carrito" %} | Importados{% endblock %}
 
 {% block content %}
 <section class="cart-premium-section">
     <div class="container">
         <div class="cart-hero-box">
             <div>
-                <span class="section-mini-label">Tu selección</span>
-                <h1 class="fw-bold mb-2">Carrito de compras</h1>
+                <span class="section-mini-label">{% trans "Tu selección" %}</span>
+                <h1 class="fw-bold mb-2">{% trans "Carrito de compras" %}</h1>
                 <p class="text-muted mb-0">
-                    Revisa tus productos, ajusta cantidades y prepara tu pedido antes de finalizar la compra.
+                    {% trans "Revisa tus productos, ajusta cantidades y prepara tu pedido antes de finalizar la compra." %}
                 </p>
             </div>
             <div class="d-flex flex-wrap gap-2">
-                <a href="/catalogo/" class="btn btn-outline-dark nav-pill-btn">Seguir comprando</a>
-                <a href="/checkout/" class="btn btn-dark nav-pill-btn">Ir al checkout</a>
+                <a href="/catalogo/" class="btn btn-outline-dark nav-pill-btn">{% trans "Seguir comprando" %}</a>
+                <a href="/checkout/" class="btn btn-dark nav-pill-btn">{% trans "Ir al checkout" %}</a>
             </div>
         </div>
 
@@ -26,21 +27,24 @@
 
             <div class="col-lg-4">
                 <div class="cart-summary-box">
-                    <span class="summary-badge">Resumen</span>
-                    <h3 class="fw-bold mt-2 mb-3">Tu pedido</h3>
+                    <span class="summary-badge">{% trans "Resumen" %}</span>
+                    <h3 class="fw-bold mt-2 mb-3">{% trans "Tu pedido" %}</h3>
 
                     <div class="summary-line">
-                        <span>Productos en carrito</span>
+                        <span>{% trans "Productos en carrito" %}</span>
                         <strong id="cart-count">0</strong>
                     </div>
 
                     <div class="summary-line total-line">
-                        <span>Total estimado</span>
-                        <strong id="cart-total">$0</strong>
+                        <span>{% trans "Total estimado" %}</span>
+                        <div class="text-end">
+                            <strong id="cart-total">$0</strong>
+                            <div class="text-muted small" id="cart-total-usd"></div>
+                        </div>
                     </div>
 
-                    <a href="/checkout/" class="btn btn-dark w-100 mt-4 premium-btn-main">Finalizar compra</a>
-                    <a href="/catalogo/" class="btn btn-outline-dark w-100 mt-2 premium-btn-alt">Agregar más productos</a>
+                    <a href="/checkout/" class="btn btn-dark w-100 mt-4 premium-btn-main">{% trans "Finalizar compra" %}</a>
+                    <a href="/catalogo/" class="btn btn-outline-dark w-100 mt-2 premium-btn-alt">{% trans "Agregar más productos" %}</a>
                 </div>
             </div>
         </div>

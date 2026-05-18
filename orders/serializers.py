@@ -21,7 +21,7 @@ class CreateOrderInputSerializer(serializers.Serializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ["id", "name", "brand", "sku", "price", "is_active"]
+        fields = ["id", "name", "brand", "sku", "price", "image_url", "description", "is_active"]
 
 
 class OrderItemOutputSerializer(serializers.ModelSerializer):
