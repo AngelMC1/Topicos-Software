@@ -3,8 +3,8 @@ from typing import Any, Dict
 
 
 class AlliedServicePort(ABC):
-    """Puerto (interfaz) para consumir el servicio del equipo aliado."""
+    """Puerto (interfaz) para consumir el servicio del equipo aliado (Vis Vitalis)."""
 
     @abstractmethod
-    def get_status(self) -> Dict[str, Any]:
-        """Retorna información de estado del servicio aliado."""
+    def get_therapists(self) -> Dict[str, Any]:
+        """Retorna el catálogo de terapeutas del equipo aliado."""

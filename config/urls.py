@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.views.i18n import JavaScriptCatalog
-from orders.views import home_page, catalog_page, cart_page, checkout_page
+from orders.views import home_page, catalog_page, cart_page, checkout_page, allied_page
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -12,6 +12,7 @@ urlpatterns = [
     path("catalogo/", catalog_page, name="catalogo"),
     path("carrito/", cart_page, name="carrito"),
     path("checkout/", checkout_page, name="checkout"),
+    path("aliado/", allied_page, name="aliado"),
 
     path("api/", include("orders.urls")),
 ]

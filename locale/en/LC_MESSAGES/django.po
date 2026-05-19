@@ -28,6 +28,42 @@ msgstr "Catalog | Cart | Checkout"
 msgid "© 2026 Importados. Todos los derechos reservados."
 msgstr "© 2026 Importados. All rights reserved."
 
+msgid "Aliado"
+msgstr "Allied"
+
+msgid "Servicio Aliado"
+msgstr "Allied Service"
+
+msgid "Integración"
+msgstr "Integration"
+
+msgid "Servicio del Equipo Aliado"
+msgstr "Allied Team Service"
+
+msgid "Información en tiempo real consumida desde el microservicio del equipo aliado mediante el Patrón Adapter."
+msgstr "Real-time information consumed from the allied team's microservice using the Adapter Pattern."
+
+msgid "Cargando..."
+msgstr "Loading..."
+
+msgid "Conectando con el servicio aliado..."
+msgstr "Connecting to the allied service..."
+
+msgid "Servicio no disponible"
+msgstr "Service Unavailable"
+
+msgid "Fuente:"
+msgstr "Source:"
+
+msgid "En línea"
+msgstr "Online"
+
+msgid "Datos recibidos"
+msgstr "Received Data"
+
+msgid "Última consulta:"
+msgstr "Last checked:"
+
 msgid "Sitio oficial"
 msgstr "Official site"
 

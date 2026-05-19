@@ -113,12 +113,12 @@ class ExchangeRateAPIView(APIView):
 
 class AlliedServiceView(APIView):
     """
-    Consume el servicio del equipo aliado vía AlliedServiceAdapter (Patrón Adapter, DIP).
+    Consume el catálogo de terapeutas de Vis Vitalis vía AlliedServiceAdapter (Patrón Adapter, DIP).
     La URL se configura con la variable de entorno ALLIED_SERVICE_URL.
     """
     def get(self, request):
         adapter = AlliedServiceAdapter()
-        result = adapter.get_status()
+        result = adapter.get_therapists()
         http_status = status.HTTP_200_OK if result.get("available") else status.HTTP_503_SERVICE_UNAVAILABLE
         return Response(result, status=http_status)
 
@@ -137,3 +137,7 @@ def cart_page(request):
 
 def checkout_page(request):
     return render(request, "frontend/checkout.html")
+
+
+def allied_page(request):
+    return render(request, "frontend/allied.html")
